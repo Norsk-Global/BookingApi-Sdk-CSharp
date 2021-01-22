@@ -1,0 +1,44 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28714.193
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "global", "global", "{6958E67D-7725-4111-80C0-65D59201D54D}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+		LICENSE = LICENSE
+		README.md = README.md
+		.editorconfig = .editorconfig
+		BookingApi-Sdk.ruleset = BookingApi-Sdk.ruleset
+		analyzers.props = analyzers.props
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E476D115-6CD5-4631-9A9B-D802CEDD4540}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A7CFC5FB-8DB9-4235-B70D-1C5F16019137}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingApi.Abstractions", "BookingApi.Abstractions\BookingApi.Abstractions.csproj", "{BA45AB3F-D72B-4A24-90E7-B60235C91B53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookingApi.Core", "BookingApi.Core\BookingApi.Core.csproj", "{475E618B-116D-4C10-9ED9-41B7CAF3FCD5}"
+EndProject
+Global
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6137A75B-60E7-4F45-A2E2-A16F3A091342}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA45AB3F-D72B-4A24-90E7-B60235C91B53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA45AB3F-D72B-4A24-90E7-B60235C91B53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{475E618B-116D-4C10-9ED9-41B7CAF3FCD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{475E618B-116D-4C10-9ED9-41B7CAF3FCD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{BA45AB3F-D72B-4A24-90E7-B60235C91B53} = {E476D115-6CD5-4631-9A9B-D802CEDD4540}
+		{475E618B-116D-4C10-9ED9-41B7CAF3FCD5} = {E476D115-6CD5-4631-9A9B-D802CEDD4540}
+	EndGlobalSection
+EndGlobal
