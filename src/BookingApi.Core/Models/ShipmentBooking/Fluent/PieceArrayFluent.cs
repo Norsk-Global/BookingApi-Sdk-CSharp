@@ -12,9 +12,9 @@ namespace BookingApi.Core.Models.ShipmentBooking.Fluent
         {
         }
 
-        public PieceArrayFluent AddProduct(Action<PieceFluent> builder) => AddProduct(null, builder);
+        public PieceArrayFluent AddPiece(Action<PieceFluent> builder) => AddPiece(null, builder);
 
-        public PieceArrayFluent AddProduct(IPiece sourceProduct, Action<PieceFluent> builder)
+        public PieceArrayFluent AddPiece(IPiece sourceProduct, Action<PieceFluent> builder)
         {
             var productFluent = new PieceFluent(sourceProduct);
             builder(productFluent);

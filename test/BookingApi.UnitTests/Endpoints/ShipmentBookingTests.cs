@@ -20,7 +20,7 @@ namespace BookingApi.UnitTests.Endpoints
                 .WithDescription("test Clothing")
                 .WithDocuments()
                 .WithPieces(pieces => pieces
-                    .AddProduct(piece => piece
+                    .AddPiece(piece => piece
                         .Depth(1.00m)
                         .Height(1.00m)
                         .Width(1.00m)

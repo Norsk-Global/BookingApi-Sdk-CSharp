@@ -154,7 +154,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var consigneeBuilder = new AddressFluent(null);
             builder(consigneeBuilder);
-            bookShipmentRequest.Consignee = consigneeBuilder as IAddress;
+            bookShipmentRequest.Consignee = (Address)consigneeBuilder;
             return bookShipmentRequest;
         }
 
@@ -163,7 +163,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var collectionBuilder = new CollectionAddressFluent(null);
             builder(collectionBuilder);
-            bookShipmentRequest.CollectionAddress = collectionBuilder as ICollectionAddress;
+            bookShipmentRequest.CollectionAddress = (CollectionAddress)collectionBuilder;
             return bookShipmentRequest;
         }
 
@@ -172,7 +172,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var shipperBuilder = new AddressFluent(null);
             builder(shipperBuilder);
-            bookShipmentRequest.Shipper = shipperBuilder as IAddress;
+            bookShipmentRequest.Shipper = (Address)shipperBuilder;
             return bookShipmentRequest;
         }
 
