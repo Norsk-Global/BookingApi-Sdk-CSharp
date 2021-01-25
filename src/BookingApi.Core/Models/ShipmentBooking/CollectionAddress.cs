@@ -1,8 +1,9 @@
 using System;
 using BookingApi.Abstractions.Models;
+using BookingApi.Abstractions.Models.ShipmentBooking;
 using Newtonsoft.Json;
 
-namespace BookingApi.Core.Models
+namespace BookingApi.Core.Models.ShipmentBooking
 {
     public class CollectionAddress : ICollectionAddress
     {

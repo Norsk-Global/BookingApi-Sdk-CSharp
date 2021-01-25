@@ -1,6 +1,6 @@
 using System;
 
-namespace BookingApi.Abstractions.Models
+namespace BookingApi.Abstractions.Models.ShipmentBooking
 {
     public interface ICollectionAddress : IAddress
     {

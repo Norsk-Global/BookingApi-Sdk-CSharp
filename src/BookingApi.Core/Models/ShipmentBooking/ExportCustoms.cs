@@ -1,6 +1,7 @@
 using BookingApi.Abstractions.Models;
+using BookingApi.Abstractions.Models.ShipmentBooking;
 
-namespace BookingApi.Core.Models
+namespace BookingApi.Core.Models.ShipmentBooking
 {
     public class ExportCustoms : IExportCustoms
     {

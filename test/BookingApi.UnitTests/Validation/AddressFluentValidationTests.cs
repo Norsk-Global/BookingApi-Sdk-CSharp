@@ -1,6 +1,7 @@
 using System;
 using BookingApi.Core.Models;
-using BookingApi.Core.Models.Fluent;
+using BookingApi.Core.Models.ShipmentBooking;
+using BookingApi.Core.Models.ShipmentBooking.Fluent;
 using Shouldly;
 using Xunit;
 

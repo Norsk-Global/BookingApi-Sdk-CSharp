@@ -1,4 +1,4 @@
-namespace BookingApi.Abstractions.Models
+namespace BookingApi.Abstractions.Models.ShipmentBooking
 {
     public enum InvoiceType
     {

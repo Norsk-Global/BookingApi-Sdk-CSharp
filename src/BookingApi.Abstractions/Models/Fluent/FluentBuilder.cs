@@ -20,8 +20,6 @@ namespace BookingApi.Abstractions.Models.Fluent
             _model = (TImplementation)model;
         }
 
-
-
         protected T Validate<T>(T value, [CallerMemberName] string method = "")
         {
             var methodInfo = GetType().GetMethod(method);

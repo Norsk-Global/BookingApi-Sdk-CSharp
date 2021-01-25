@@ -1,9 +1,9 @@
-using System;
 using BookingApi.Abstractions.Models;
 using BookingApi.Abstractions.Models.Fluent;
+using BookingApi.Abstractions.Models.ShipmentBooking;
 using BookingApi.Core.Models.Validation;
 
-namespace BookingApi.Core.Models.Fluent
+namespace BookingApi.Core.Models.ShipmentBooking.Fluent
 {
     public class ExportCustomsFluent : FluentBuilder<ExportCustoms, IExportCustoms>
     {

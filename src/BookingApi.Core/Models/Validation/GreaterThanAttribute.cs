@@ -14,12 +14,12 @@ namespace BookingApi.Core.Models.Validation
         public override (bool isValid, string validationMessage) Validate<T>(string fieldName, T value)
         {
             if (value is decimal decimalValue)
-                return decimalValue > MinValue
+                return decimalValue < MinValue
                     ? (false, $"The field {fieldName} must be greater than {MinValue}")
                     : (true, "");
 
             if (value is int intValue)
-                return intValue > MinValue
+                return intValue < MinValue
                     ? (false, $"The field {fieldName} must be greater than {MinValue}")
                     : (true, "");
 

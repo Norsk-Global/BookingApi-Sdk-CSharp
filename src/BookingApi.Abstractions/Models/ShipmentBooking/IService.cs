@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace BookingApi.Abstractions.Models
+namespace BookingApi.Abstractions.Models.ShipmentBooking
 {
     public interface IService
     {

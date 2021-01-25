@@ -1,4 +1,4 @@
-namespace BookingApi.Core.Models
+namespace BookingApi.Core.Models.ShipmentBooking
 {
     public class ErrorResponse
     {

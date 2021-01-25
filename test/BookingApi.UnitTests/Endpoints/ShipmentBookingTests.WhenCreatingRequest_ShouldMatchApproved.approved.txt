@@ -1,0 +1,30 @@
+{
+  "Pieces": [
+    {
+      "Depth": 1.00,
+      "Height": 1.00,
+      "Width": 1.00,
+      "Weight": 1.00,
+      "NumberOfPieces": 1
+    }
+  ],
+  "ReadyByDate": "2021-01-25T14:48:50.9074036+00:00",
+  "Hawb": "123123123",
+  "Description": "test Clothing",
+  "Value": 0.00,
+  "NonDox": false,
+  "DDP": false,
+  "Pallet": false,
+  "Consignee": {
+    "ContactName": "Test",
+    "Company": "Test",
+    "Address1": "2 Willow Road",
+    "City": "Slough",
+    "Zipcode": "SL3 0BS",
+    "CountryCode": "GB"
+  },
+  "Service": {
+    "Code": "IEL"
+  },
+  "LabelFormat": "Pdf"
+}
