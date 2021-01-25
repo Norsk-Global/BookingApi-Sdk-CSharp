@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
@@ -8,6 +10,7 @@ using BookingApi.Abstractions.Api;
 using BookingApi.Abstractions.Api.Endpoints;
 using BookingApi.Core.Api.Endpoints;
 using BookingApi.Core.Models.ShipmentBooking;
+using BookingApi.Core.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -28,11 +31,12 @@ namespace BookingApi.Core.Api
 
         public ApiClient()
         {
-            _serializerSettings = new JsonSerializerSettings
-            {
+            _serializerSettings = new JsonSerializerSettings {
                 NullValueHandling = NullValueHandling.Ignore,
                 Formatting = Formatting.Indented,
-                Converters = new[] {new StringEnumConverter()}
+                Converters = new JsonConverter[] {
+                    new StringEnumConverter()
+                }
             };
         }
 
@@ -57,24 +61,30 @@ namespace BookingApi.Core.Api
             requestBuilder(request);
 
             var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
-
-            var authentication = SignRequest(request.Method, rawJson, "application/json", "api/shipment");
             var httpRequest = new HttpRequest<BookShipmentRequest, BookShipmentResponse>(request);
 
-            httpRequest.ConstructRequest(() =>
-            {
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
                 var message = new HttpRequestMessage(request.Method, request.Endpoint)
                 {
-                    Content = new StringContent(rawJson, Encoding.UTF8, "application/json")
+                    Content = new StringContent(rawJson)
                 };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    "/api/shipment", requestDateTime);
+
                 message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
                 return message;
             });
 
             return await SendWithLock(httpRequest);
         }
 
-        private string SignRequest(HttpMethod method, string rawJson, string contentType, string endpoint)
+        private string SignRequest(HttpMethod method, string rawJson, string contentType, string endpoint, DateTime dateTime)
         {
             var md5 = MD5.Create();
 
@@ -83,11 +93,10 @@ namespace BookingApi.Core.Api
             authBuilder.Append(BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(rawJson)))
                 .Replace("-", "").ToLowerInvariant()).Append("\n");
             authBuilder.Append(contentType).Append("\n");
-            authBuilder.Append(DateTime.Now.ToUniversalTime()).Append("\n");
+            authBuilder.Append(dateTime.ToUniversalTime().ToString("r")).Append("\n");
             authBuilder.Append(endpoint);
 
-            var hmacsha1 = HMAC.Create();
-            hmacsha1.Key = Encoding.UTF8.GetBytes(_secretKey);
+            var hmacsha1 = new HMACSHA1 {Key = Encoding.UTF8.GetBytes(_secretKey)};
             var signBytes = Encoding.UTF8.GetBytes(authBuilder.ToString());
             var hashResult = hmacsha1.ComputeHash(signBytes);
 

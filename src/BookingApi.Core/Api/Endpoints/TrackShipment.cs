@@ -3,13 +3,6 @@ using BookingApi.Abstractions.Api;
 
 namespace BookingApi.Core.Api.Endpoints
 {
-    public class TrackShipmentEndpoint : Endpoint<TrackShipmentRequest, TrackShipmentResponse>
-    {
-        public TrackShipmentEndpoint(TrackShipmentRequest request, TrackShipmentResponse response) : base(request, response)
-        {
-        }
-    }
-
     public class TrackShipmentRequest : EndpointMethod, IEndpointUrl
     {
         public TrackShipmentRequest(string baseUrl) : base(HttpMethod.Get)

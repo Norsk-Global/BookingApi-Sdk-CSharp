@@ -4,7 +4,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BookingApi.Abstractions.Api;
 using BookingApi.Core.Http.Extensions;
-using BookingApi.Core.Models;
 using BookingApi.Core.Models.ShipmentBooking;
 
 namespace BookingApi.Core.Api

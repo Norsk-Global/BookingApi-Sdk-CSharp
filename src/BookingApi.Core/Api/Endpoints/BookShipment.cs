@@ -1,24 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using BookingApi.Abstractions.Api;
 using BookingApi.Abstractions.Api.Endpoints;
 using BookingApi.Abstractions.Models.ShipmentBooking;
-using BookingApi.Core.Models.ShipmentBooking;
-using BookingApi.Core.Models.ShipmentBooking.Fluent;
+using BookingApi.Core.Serialization;
 using Newtonsoft.Json;
 
 namespace BookingApi.Core.Api.Endpoints
 {
-    public class BookShipmentEndpoint : Endpoint<IBookShipmentRequest, IBookShipmentResponse>
-    {
-        public BookShipmentEndpoint(IBookShipmentRequest request, IBookShipmentResponse response) : base(request,
-            response)
-        {
-        }
-    }
-
     public class BookShipmentRequest : EndpointMethod, IEndpointUrl, IBookShipmentRequest
     {
         public BookShipmentRequest(string baseUrl) : base(HttpMethod.Post)
@@ -74,140 +64,14 @@ namespace BookingApi.Core.Api.Endpoints
 
     public class BookShipmentResponse : IBookShipmentResponse
     {
+        public string Barcode { get; set; }
+        public byte[] Label { get; set; }
+        public string NorskBarcode { get; set; }
 
-    }
+        [JsonConverter(typeof(ShipmentBookingItemSerializer))]
+        public IList<IShipmentBookingItem> Items { get; set; }
 
-    public static class BookShipmentRequestExtensions
-    {
-        public static BookShipmentRequest WithPieces(this BookShipmentRequest bookShipmentRequest, Action<PieceArrayFluent> builder)
-        {
-            var piecesArrayFluent = new PieceArrayFluent(new List<Piece>());
-            builder(piecesArrayFluent);
-            bookShipmentRequest.Pieces = ((List<Piece>)piecesArrayFluent).Cast<IPiece>().ToList();
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithReadyByDate(this BookShipmentRequest bookShipmentRequest,
-            DateTime? currentDate = null)
-        {
-            if (currentDate == null) currentDate = DateTime.Now;
-            bookShipmentRequest.ReadyByDate = currentDate.Value;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithHawb(this BookShipmentRequest bookShipmentRequest, string hawb)
-        {
-            bookShipmentRequest.Hawb = hawb;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithDescription(this BookShipmentRequest bookShipmentRequest,
-            string description)
-        {
-            bookShipmentRequest.Description = description;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithDocuments(this BookShipmentRequest bookShipmentRequest)
-        {
-            bookShipmentRequest.NonDox = false;
-            bookShipmentRequest.Value = 0.00m;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithNonDocuments(this BookShipmentRequest bookShipmentRequest,
-            decimal shipmentValue)
-        {
-            bookShipmentRequest.NonDox = true;
-            bookShipmentRequest.Value = shipmentValue;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithCurrency(this BookShipmentRequest bookShipmentRequest,
-            string currencyCode)
-        {
-            bookShipmentRequest.Currency = currencyCode;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithDdp(this BookShipmentRequest bookShipmentRequest)
-        {
-            bookShipmentRequest.Ddp = true;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithPallet(this BookShipmentRequest bookShipmentRequest)
-        {
-            bookShipmentRequest.Pallet = true;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithRequester(this BookShipmentRequest bookShipmentRequest,
-            string requesterName, string phoneNumber = "")
-        {
-            bookShipmentRequest.Requester = new Requester {Name = requesterName, PhoneNumber = phoneNumber};
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithConsignee(this BookShipmentRequest bookShipmentRequest,
-            Action<AddressFluent> builder)
-        {
-            var consigneeBuilder = new AddressFluent(null);
-            builder(consigneeBuilder);
-            bookShipmentRequest.Consignee = (Address)consigneeBuilder;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithCollection(this BookShipmentRequest bookShipmentRequest,
-            Action<CollectionAddressFluent> builder)
-        {
-            var collectionBuilder = new CollectionAddressFluent(null);
-            builder(collectionBuilder);
-            bookShipmentRequest.CollectionAddress = (CollectionAddress)collectionBuilder;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithShipper(this BookShipmentRequest bookShipmentRequest,
-            Action<AddressFluent> builder)
-        {
-            var shipperBuilder = new AddressFluent(null);
-            builder(shipperBuilder);
-            bookShipmentRequest.Shipper = (Address)shipperBuilder;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithServiceCode(this BookShipmentRequest bookShipmentRequest,
-            string serviceCode)
-        {
-            bookShipmentRequest.Service = new Service {Code = serviceCode};
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest AsPdf(this BookShipmentRequest bookShipmentRequest)
-        {
-            bookShipmentRequest.LabelFormat = LabelFormat.Pdf;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest AsEpl(this BookShipmentRequest bookShipmentRequest)
-        {
-            bookShipmentRequest.LabelFormat = LabelFormat.Epl;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest AsZpl(this BookShipmentRequest bookShipmentRequest)
-        {
-            bookShipmentRequest.LabelFormat = LabelFormat.Zpl;
-            return bookShipmentRequest;
-        }
-
-        public static BookShipmentRequest WithExportCustoms(this BookShipmentRequest bookShipmentRequest,
-            Action<ExportCustomsFluent> builder)
-        {
-            var exportCustomersBuilder = new ExportCustomsFluent(null);
-            builder(exportCustomersBuilder);
-            bookShipmentRequest.ExportCustoms = exportCustomersBuilder as IExportCustoms;
-            return bookShipmentRequest;
-        }
+        [JsonConverter(typeof(ShipmentArchiveDocumentSerializer))]
+        public IList<IShipmentArchiveDocument> ArchiveDocuments { get; set; }
     }
 }
