@@ -4,7 +4,7 @@
 ![Norsk Logo](https://norsk.global/wp-content/uploads/2016/11/norsk-logo-1.png)
 
 ### Description
-This SDK will help you to incooperatoe Norsk Globals Extensive Booking Api ([Norsk Booking Api](http://api.norsk-global.com/help/schema)) into every day applications, business processes, and workflows. Use one of our many SDKs to get started quickly and easily integrate API calls into your applications.
+This SDK will help you to incorporate Norsk Globals Extensive Booking Api ([Norsk Booking Api](http://api.norsk-global.com/help/schema)) into every day applications, business processes, and workflows. Use one of our many SDKs to get started quickly and easily integrate API calls into your applications.
 
 ### Norsk Global Booking APIs:
 

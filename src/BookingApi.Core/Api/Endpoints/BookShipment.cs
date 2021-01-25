@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using BookingApi.Abstractions.Api;
+using BookingApi.Abstractions.Models;
+using Newtonsoft.Json;
 
 namespace BookingApi.Core.Api.Endpoints
 {
@@ -18,8 +22,48 @@ namespace BookingApi.Core.Api.Endpoints
             BaseUrl = baseUrl;
         }
 
+        [JsonIgnore]
         public string BaseUrl { get; }
+
+        [JsonIgnore]
         public string Endpoint => BaseUrl + "/api/shipment";
+
+        public List<IPiece> Pieces { get; set; }
+
+        public DateTime ReadyByDate { get; set; }
+
+        public string Hawb { get; set; }
+
+        public string Description { get; set; }
+
+        public decimal Value { get; set; }
+
+        public bool NonDox { get; set; }
+
+        [JsonProperty("DDP")]
+        public bool Ddp { get; set; }
+
+        public bool Pallet { get; set; }
+
+        public string Invoice { get; set; }
+
+        public IRequester Requester { get; set; }
+
+        public IAddress Consignee { get; set; }
+
+        public ICollectionAddress CollectionAddress { get; set; }
+
+        public IAddress Shipper { get; set; }
+
+        public IService Service { get; set; }
+
+        public IPicking Picking { get; set; }
+
+        public LabelFormat LabelFormat { get; set; }
+
+        public ISiteDetails Site { get; set; }
+
+        public IExportCustoms ExportCustoms { get; set; }
     }
 
     public class BookShipmentResponse
