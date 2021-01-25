@@ -27,7 +27,10 @@ This SDK will help you to incorporate Norsk Globals Extensive Booking Api ([Nors
 A simple Booking Request with no value can be as follows:
 
 ``` C#
-var request = ApiClient
+
+// Book a shipment using the FluentFactories provided.
+// All Authentication and requests are handled in the background.
+var response = ApiClient
                 .BookShipment(booking => booking
                     .CreateBooking()
                     .WithReadyByDate()
@@ -50,4 +53,8 @@ var request = ApiClient
                         .CountryCode("GB"))
                     .WithServiceCode("IEL")
                 );
+                
+// Retrieve Information from response if 200.
+var trackingNumber = response.Barcode;
+var label = response.RawLabel();
 ```

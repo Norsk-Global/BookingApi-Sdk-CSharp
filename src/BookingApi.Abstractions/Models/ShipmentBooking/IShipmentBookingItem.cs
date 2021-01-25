@@ -1,3 +1,5 @@
+using System.IO;
+
 namespace BookingApi.Abstractions.Models.ShipmentBooking
 {
     public interface IShipmentBookingItem
@@ -11,5 +13,9 @@ namespace BookingApi.Abstractions.Models.ShipmentBooking
         string ScanBarcode { get; set; }
 
         decimal Weight { get; set; }
+
+        string RawLabel();
+
+        Stream LabelStream();
     }
 }

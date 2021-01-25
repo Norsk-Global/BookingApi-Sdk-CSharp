@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using BookingApi.Abstractions.Models.ShipmentBooking;
 
 namespace BookingApi.Abstractions.Api.Endpoints
@@ -14,5 +15,9 @@ namespace BookingApi.Abstractions.Api.Endpoints
         IList<IShipmentBookingItem> Items { get; set; }
 
         IList<IShipmentArchiveDocument> ArchiveDocuments { get; set; }
+
+        string RawLabel();
+
+        Stream LabelStream();
     }
 }

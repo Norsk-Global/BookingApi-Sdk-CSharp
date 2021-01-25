@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using BookingApi.Abstractions.Api;
 using BookingApi.Abstractions.Api.Endpoints;
@@ -73,5 +74,9 @@ namespace BookingApi.Core.Api.Endpoints
 
         [JsonConverter(typeof(ShipmentArchiveDocumentSerializer))]
         public IList<IShipmentArchiveDocument> ArchiveDocuments { get; set; }
+
+        public string RawLabel() => Convert.ToBase64String(Label);
+
+        public Stream LabelStream() => new MemoryStream(Label);
     }
 }
