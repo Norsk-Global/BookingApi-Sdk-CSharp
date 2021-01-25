@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using BookingApi.Abstractions.Api;
-using BookingApi.Abstractions.Models;
+using BookingApi.Abstractions.Api.Endpoints;
 using BookingApi.Abstractions.Models.ShipmentBooking;
 using BookingApi.Core.Models.ShipmentBooking;
 using BookingApi.Core.Models.ShipmentBooking.Fluent;
@@ -10,15 +11,15 @@ using Newtonsoft.Json;
 
 namespace BookingApi.Core.Api.Endpoints
 {
-    public class BookShipmentEndpoint : Endpoint<BookShipmentRequest, BookShipmentResponse>
+    public class BookShipmentEndpoint : Endpoint<IBookShipmentRequest, IBookShipmentResponse>
     {
-        public BookShipmentEndpoint(BookShipmentRequest request, BookShipmentResponse response) : base(request,
+        public BookShipmentEndpoint(IBookShipmentRequest request, IBookShipmentResponse response) : base(request,
             response)
         {
         }
     }
 
-    public class BookShipmentRequest : EndpointMethod, IEndpointUrl
+    public class BookShipmentRequest : EndpointMethod, IEndpointUrl, IBookShipmentRequest
     {
         public BookShipmentRequest(string baseUrl) : base(HttpMethod.Post)
         {
@@ -31,7 +32,7 @@ namespace BookingApi.Core.Api.Endpoints
         [JsonIgnore]
         public string Endpoint => BaseUrl + "/api/shipment";
 
-        public List<Piece> Pieces { get; set; }
+        public List<IPiece> Pieces { get; set; }
 
         public DateTime ReadyByDate { get; set; }
 
@@ -52,26 +53,26 @@ namespace BookingApi.Core.Api.Endpoints
 
         public string Invoice { get; set; }
 
-        public Requester Requester { get; set; }
+        public IRequester Requester { get; set; }
 
-        public Address Consignee { get; set; }
+        public IAddress Consignee { get; set; }
 
-        public CollectionAddress CollectionAddress { get; set; }
+        public ICollectionAddress CollectionAddress { get; set; }
 
-        public Address Shipper { get; set; }
+        public IAddress Shipper { get; set; }
 
-        public Service Service { get; set; }
+        public IService Service { get; set; }
 
-        public Picking Picking { get; set; }
+        public IPicking Picking { get; set; }
 
         public LabelFormat LabelFormat { get; set; }
 
-        public SiteDetails Site { get; set; }
+        public ISiteDetails Site { get; set; }
 
-        public ExportCustoms ExportCustoms { get; set; }
+        public IExportCustoms ExportCustoms { get; set; }
     }
 
-    public class BookShipmentResponse
+    public class BookShipmentResponse : IBookShipmentResponse
     {
 
     }
@@ -82,7 +83,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var piecesArrayFluent = new PieceArrayFluent(new List<Piece>());
             builder(piecesArrayFluent);
-            bookShipmentRequest.Pieces = piecesArrayFluent;
+            bookShipmentRequest.Pieces = ((List<Piece>)piecesArrayFluent).Cast<IPiece>().ToList();
             return bookShipmentRequest;
         }
 
@@ -153,7 +154,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var consigneeBuilder = new AddressFluent(null);
             builder(consigneeBuilder);
-            bookShipmentRequest.Consignee = consigneeBuilder;
+            bookShipmentRequest.Consignee = consigneeBuilder as IAddress;
             return bookShipmentRequest;
         }
 
@@ -162,7 +163,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var collectionBuilder = new CollectionAddressFluent(null);
             builder(collectionBuilder);
-            bookShipmentRequest.CollectionAddress = collectionBuilder;
+            bookShipmentRequest.CollectionAddress = collectionBuilder as ICollectionAddress;
             return bookShipmentRequest;
         }
 
@@ -171,7 +172,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var shipperBuilder = new AddressFluent(null);
             builder(shipperBuilder);
-            bookShipmentRequest.Shipper = shipperBuilder;
+            bookShipmentRequest.Shipper = shipperBuilder as IAddress;
             return bookShipmentRequest;
         }
 
@@ -205,7 +206,7 @@ namespace BookingApi.Core.Api.Endpoints
         {
             var exportCustomersBuilder = new ExportCustomsFluent(null);
             builder(exportCustomersBuilder);
-            bookShipmentRequest.ExportCustoms = exportCustomersBuilder;
+            bookShipmentRequest.ExportCustoms = exportCustomersBuilder as IExportCustoms;
             return bookShipmentRequest;
         }
     }
