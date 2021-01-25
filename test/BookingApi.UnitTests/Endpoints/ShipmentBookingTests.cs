@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BookingApi.Core.Api.Endpoints;
 using Newtonsoft.Json;
@@ -14,7 +15,7 @@ namespace BookingApi.UnitTests.Endpoints
         {
             // Arrange
             var request = new BookShipmentRequest("/")
-                .WithReadyByDate()
+                .WithReadyByDate(new DateTime(2021, 01, 25, 14, 0, 0))
                 .WithHawb("123123123")
                 .WithDescription("test Clothing")
                 .WithDocuments()

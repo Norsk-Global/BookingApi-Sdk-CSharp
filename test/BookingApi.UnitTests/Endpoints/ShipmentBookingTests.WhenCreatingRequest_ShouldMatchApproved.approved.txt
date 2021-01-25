@@ -8,7 +8,7 @@
       "NumberOfPieces": 1
     }
   ],
-  "ReadyByDate": "2021-01-25T14:48:50.9074036+00:00",
+  "ReadyByDate": "2021-01-25T14:00:00",
   "Hawb": "123123123",
   "Description": "test Clothing",
   "Value": 0.00,
