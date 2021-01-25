@@ -24,11 +24,12 @@ This SDK will help you to incorporate Norsk Globals Extensive Booking Api ([Nors
 
 ### Book Shipment
 
-A simple Booking Request wit no value can be as follows:
+A simple Booking Request with no value can be as follows:
 
 ``` C#
-var request = new BookShipmentRequest("/")
-                .WithReadyByDate(new DateTime(2021, 01, 25, 14, 0, 0))
+var request = ApiClient
+                .CreateBooking()
+                .WithReadyByDate()
                 .WithHawb("123123123")
                 .WithDescription("test Clothing")
                 .WithDocuments()
