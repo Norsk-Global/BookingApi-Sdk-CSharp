@@ -14,7 +14,7 @@ namespace BookingApi.UnitTests
             // Arrange
             var client = ApiClient.ApiInstance;
             client.UseStagingApi();
-            client.Authentication("KCNIMZ4SSA4M2NPFIX3XKXUSZLRCD23G2SCHUGOXP5PJ2IMT", "CQBT2TNFAMMCO5BP");
+            client.Authentication("", "");
 
             var response = await client.BookShipment(builder => builder
                 .WithReadyByDate(DateTime.Now)

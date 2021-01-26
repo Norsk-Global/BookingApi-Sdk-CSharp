@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BookingApi.Core.Api;
 using Xunit;
 using Shouldly;
+using BookingApi.Core.Api.Endpoints;
 
 namespace BookingApi.UnitTests.Endpoints
 {
@@ -16,9 +17,9 @@ namespace BookingApi.UnitTests.Endpoints
             // Arrange
             var client = ApiClient.ApiInstance;
             client.UseStagingApi();
-            client.Authentication("BDUOP27LZ7PZ6ZKZU2EIKYR6BILZNGBUCCYIAWFZO3AXHWYU", "TWXABEWZGLABHQIW");
+            client.Authentication("", "");
 
-            var response = await client.TrackShipment(builder => builder.Barcode = "703451258001");
+            var response = await client.TrackShipment(builder => builder.WithBarcode("703451258001"));
 
             response.ShouldNotBeNull();
             response.NorskBarcode.ShouldBe("703451258001");

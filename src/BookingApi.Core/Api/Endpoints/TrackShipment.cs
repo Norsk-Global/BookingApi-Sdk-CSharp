@@ -16,10 +16,10 @@ namespace BookingApi.Core.Api.Endpoints
             BaseUrl = baseUrl;
         }
 
+        [JsonIgnore]
         public string BaseUrl { get; }
 
 
-        //TODO Change Endpoint
         [JsonIgnore]
         public string Endpoint => BaseUrl + $"/api/shipment/{Barcode}";
 
