@@ -17,10 +17,8 @@ namespace BookingApi.Core.Serialization
             return result.Cast<INarrative>().ToList();
         }
 
-        public override void WriteJson(JsonWriter writer, [AllowNull] IList<INarrative> value, JsonSerializer serializer)
-        {
-            JsonSerializer.Create().Serialize(writer, value);
-        }
+        public override void WriteJson(JsonWriter writer, [AllowNull] IList<INarrative> value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
+
 
     }
 
@@ -31,7 +29,7 @@ namespace BookingApi.Core.Serialization
             var result = JsonSerializer.Create().Deserialize<ProofOfDelivery>(reader);
             return result;
         }
-        public override void WriteJson(JsonWriter writer, [AllowNull] IProofOfDelivery value, JsonSerializer serializer) => throw new NotImplementedException();
+        public override void WriteJson(JsonWriter writer, [AllowNull] IProofOfDelivery value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
 
     }
 
@@ -43,9 +41,7 @@ namespace BookingApi.Core.Serialization
             return result;
         }
 
-        public override void WriteJson(JsonWriter writer, [AllowNull] INarrative value, JsonSerializer serializer)
-        {
-            throw new NotImplementedException();
-        }
+        public override void WriteJson(JsonWriter writer, [AllowNull] INarrative value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
+
     }
 }

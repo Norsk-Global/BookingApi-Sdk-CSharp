@@ -10,6 +10,7 @@ namespace BookingApi.Core.Models.ShipmentTracking
         public string Location { get; set; }
         public string Action { get; set; }
         public string StatusCode { get; set; }
+        public string Message { get; set; }
         public DateTime RecordedOn { get; set; }
     }
 }
