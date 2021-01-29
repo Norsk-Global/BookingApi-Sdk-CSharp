@@ -15,5 +15,6 @@ namespace BookingApi.Abstractions.Api
         void Authentication(string secretKey, string privateKey);
 
         Task<IBookShipmentResponse> BookShipment(Action<IBookShipmentRequest> requestBuilder);
+        Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder);
     }
 }
