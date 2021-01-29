@@ -11,7 +11,7 @@ namespace BookingApi.Core.Serialization
 {
     public class ShipmentArchiveDocumentSerializer : JsonConverter<IList<IShipmentArchiveDocument>>
     {
-        public override void WriteJson(JsonWriter writer, IList<IShipmentArchiveDocument> value, JsonSerializer serializer) => throw new NotImplementedException();
+        public override void WriteJson(JsonWriter writer, IList<IShipmentArchiveDocument> value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
 
         public override IList<IShipmentArchiveDocument> ReadJson(JsonReader reader, Type objectType,
             IList<IShipmentArchiveDocument> existingValue,
@@ -24,7 +24,7 @@ namespace BookingApi.Core.Serialization
 
     public class ShipmentBookingItemSerializer : JsonConverter<IList<IShipmentBookingItem>>
     {
-        public override void WriteJson(JsonWriter writer, IList<IShipmentBookingItem> value, JsonSerializer serializer) => throw new NotImplementedException();
+        public override void WriteJson(JsonWriter writer, IList<IShipmentBookingItem> value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
 
         public override IList<IShipmentBookingItem> ReadJson(JsonReader reader, Type objectType,
             IList<IShipmentBookingItem> existingValue,
