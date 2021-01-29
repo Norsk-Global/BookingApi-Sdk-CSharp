@@ -18,6 +18,7 @@ using Moq.Protected;
 using System.Collections.Generic;
 using BookingApi.Abstractions.Models.ShipmentTracking;
 using BookingApi.Core.Models.ShipmentTracking;
+using BookingApi.Abstractions.Models.ShipmentBooking;
 
 namespace BookingApi.UnitTests.Fixtures
 {
@@ -26,7 +27,7 @@ namespace BookingApi.UnitTests.Fixtures
         public static volatile IApiClient ApiInstance = new FakeAPIClient();
 
         public static volatile HttpClient _httpClient;
-        private static volatile SemaphoreSlim _lock = new SemaphoreSlim(1, 1);
+        
 
         private bool _isTestingMode = false;
         private string _secretKey = null;
@@ -59,19 +60,19 @@ namespace BookingApi.UnitTests.Fixtures
                     var response = new HttpResponseMessage();
                     response.StatusCode = System.Net.HttpStatusCode.OK;
                     if(request.RequestUri.Segments[request.RequestUri.Segments.Length-1] == "703451258001") { 
-                    response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new TrackingResponse() {
+                    response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new TrackShipmentResponse() {
                         NorskBarcode = "703451258001",
                         Barcode = "1641620934",
                         Hawb = "305670",
-                        Status = new Narrative() {
+                        Status = new NarrativeVm() {
                             Location = "SCN LYS-France-FR-(Lyon)                          ",
                             Action = "Status Change",
                             Message = "Status changed to: POD",
                             StatusCode = "802",
                             RecordedOn = DateTime.Parse("2020-10-22T09:15:11.517")
                         },
-                        Narrative = new List<Narrative>() {
-                            new Narrative() {
+                        Narrative = new List<INarrativeVm>() {
+                            new NarrativeVm() {
                             Location = "SCN LYS-France-FR-(Lyon)                          ",
                             Action = "Status Change",
                             Message = "Status changed to: POD",
@@ -85,14 +86,15 @@ namespace BookingApi.UnitTests.Fixtures
                     }
                     ));
                     } else {
-                        response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new ShipmentBookingResponse() {
+                        response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new BookShipmentResponse() {
                             NorskBarcode = "703451258001",
                             Barcode = "1641620934",
                             Label = new byte[1] { 23 },
-                            ArchiveDocuments = new List<ShipmentArchiveDocument>() {
+                            ArchiveDocuments = new List<IShipmentArchiveDocument>() {
                                 new ShipmentArchiveDocument(){Contents = new byte[1] { 23 } }
                             },
-                            Items = new List<ShipmentBookingItem>() {
+                            Items = new List<IShipmentBookingItem>()
+                            {
                                 new ShipmentBookingItem{ Barcode = "1641620934", Label = new byte[1]{ 23 }, NorskBarcode="703451258001", ScanBarcode="XXXXX", Weight=0.78M }
                             }
                         }
@@ -144,8 +146,7 @@ namespace BookingApi.UnitTests.Fixtures
                 message.Headers.Date = requestDateTime;
                 return message;
             });
-
-            return await SendWithLock(httpRequest);
+            return await SendRequest(httpRequest);
         }
 
         public async Task<IShipmentTrackingResponse> TrackShipment(Action<IShipmentTrackingRequest> requestBuilder)
@@ -177,7 +178,7 @@ namespace BookingApi.UnitTests.Fixtures
                 return message;
             });
 
-            return await SendWithLock(httpRequest);
+            return await SendRequest(httpRequest);
         }
 
         public void UseLiveApi() => _isTestingMode = false;
@@ -202,13 +203,9 @@ namespace BookingApi.UnitTests.Fixtures
             return Convert.ToBase64String(hashResult);
         }
 
-        private static async Task<TResponse> SendWithLock<TRequest, TResponse>(IHttpRequest<TRequest, ErrorResponse, TResponse> httpRequest)
+        private static async Task<TResponse> SendRequest<TRequest, TResponse>(IHttpRequest<TRequest, ErrorResponse, TResponse> httpRequest)
         {
-            await _lock.WaitAsync();
-
             await httpRequest.SendAsync(_httpClient).ConfigureAwait(false);
-
-            _lock.Release();
 
             if (httpRequest.Response != null)
                 return httpRequest.Response;

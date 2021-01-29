@@ -12,9 +12,9 @@ namespace BookingApi.Abstractions.Api.Endpoints
         string Barcode { get; }
         string Hawb { get; }
 
-        INarrative Status { get; set; }
+        INarrativeVm Status { get; set; }
 
-        IList<INarrative> NarrativeVm { get; set; }
+        IList<INarrativeVm> Narrative { get; set; }
 
         IProofOfDelivery ProofOfDelivery { get; set; }
 

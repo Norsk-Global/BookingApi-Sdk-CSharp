@@ -5,7 +5,7 @@ using BookingApi.Abstractions.Models.ShipmentTracking;
 
 namespace BookingApi.Core.Models.ShipmentTracking
 {
-    public class Narrative : INarrative
+    public class NarrativeVm : INarrativeVm
     {
         public string Location { get; set; }
         public string Action { get; set; }

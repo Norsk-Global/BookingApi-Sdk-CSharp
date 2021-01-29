@@ -32,15 +32,15 @@ namespace BookingApi.Core.Api.Endpoints
         public string Barcode { get; set; }
         public string Hawb { get; set; }
 
-        [JsonProperty("Narrative")]
+        //[JsonProperty("Narrative")]
         [JsonConverter(typeof(ShipmentTrackingNarrativeVMSerializer))]
-        public IList<INarrative> NarrativeVm { get; set; }
+        public IList<INarrativeVm> Narrative { get; set; }
 
         [JsonConverter(typeof(ShipmentTrackingProofOfDeliverySerializer))]
         public IProofOfDelivery ProofOfDelivery { get; set; }
 
         [JsonConverter(typeof(ShipmentTrackingNarrativeVMLatestSerializer))]
-        public INarrative Status { get; set; }
+        public INarrativeVm Status { get; set; }
 
         
     }

@@ -9,15 +9,15 @@ using Newtonsoft.Json;
 
 namespace BookingApi.Core.Serialization
 {
-    public class ShipmentTrackingNarrativeVMSerializer : JsonConverter<IList<INarrative>>
+    public class ShipmentTrackingNarrativeVMSerializer : JsonConverter<IList<INarrativeVm>>
     {
-        public override IList<INarrative> ReadJson(JsonReader reader, Type objectType, [AllowNull] IList<INarrative> existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override IList<INarrativeVm> ReadJson(JsonReader reader, Type objectType, [AllowNull] IList<INarrativeVm> existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var result = JsonSerializer.Create().Deserialize<List<Narrative>>(reader);
-            return result.Cast<INarrative>().ToList();
+            var result = JsonSerializer.Create().Deserialize<List<NarrativeVm>>(reader);
+            return result.Cast<INarrativeVm>().ToList();
         }
 
-        public override void WriteJson(JsonWriter writer, [AllowNull] IList<INarrative> value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
+        public override void WriteJson(JsonWriter writer, [AllowNull] IList<INarrativeVm> value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
 
 
     }
@@ -33,15 +33,15 @@ namespace BookingApi.Core.Serialization
 
     }
 
-    public class ShipmentTrackingNarrativeVMLatestSerializer : JsonConverter<INarrative>
+    public class ShipmentTrackingNarrativeVMLatestSerializer : JsonConverter<INarrativeVm>
     {
-        public override INarrative ReadJson(JsonReader reader, Type objectType, [AllowNull] INarrative existingValue, bool hasExistingValue, JsonSerializer serializer)
+        public override INarrativeVm ReadJson(JsonReader reader, Type objectType, [AllowNull] INarrativeVm existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var result = JsonSerializer.Create().Deserialize<Narrative>(reader);
+            var result = JsonSerializer.Create().Deserialize<NarrativeVm>(reader);
             return result;
         }
 
-        public override void WriteJson(JsonWriter writer, [AllowNull] INarrative value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
+        public override void WriteJson(JsonWriter writer, [AllowNull] INarrativeVm value, JsonSerializer serializer) => JsonSerializer.Create().Serialize(writer, value);
 
     }
 }

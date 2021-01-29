@@ -4,7 +4,7 @@ using System.Text;
 
 namespace BookingApi.Abstractions.Models.ShipmentTracking
 {
-    public interface INarrative
+    public interface INarrativeVm
     {
         string Location { get; set; }
         string Action { get; set; }
