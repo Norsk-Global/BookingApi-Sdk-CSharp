@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using BookingApi.Abstractions.Models.ShipmentTracking;
 using BookingApi.Core.Models.ShipmentTracking;
 using BookingApi.Abstractions.Models.ShipmentBooking;
+using BookingApi.Abstractions.Models.ShipmentDimension;
+using BookingApi.Core.Models.ShipmentDimension;
 
 namespace BookingApi.UnitTests.Fixtures
 {
@@ -42,6 +44,7 @@ namespace BookingApi.UnitTests.Fixtures
                     new StringEnumConverter()
                 }
             };
+            _httpClient = SetupHttpClient();
         }
 
         private static HttpClient SetupHttpClient()
@@ -85,6 +88,23 @@ namespace BookingApi.UnitTests.Fixtures
                         }
                     }
                     ));
+                    } else if (request.RequestUri.Segments[request.RequestUri.Segments.Length - 1] == "dimensions") {
+                        response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new ShipmentDimensionResponse() {
+                            NorskBarcode = "509125319001",
+                            Barcode = "1641620934",
+                            Pieces = new List<IDimensions>() {
+                                new Dimensions {
+                                     Barcode ="1641620934",
+                                     ImageUrl = "api/1641620934/Image",
+                                      Depth = 30.5000000000m,
+                                      Height = 16.0m,
+                                      VolumeWeight = 1.0m,
+                                      Width = 2.0m,
+                                      Weight = 1m
+                                }
+                            }
+                        }
+                        ));
                     } else {
                         response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new BookShipmentResponse() {
                             NorskBarcode = "703451258001",
@@ -118,9 +138,42 @@ namespace BookingApi.UnitTests.Fixtures
             _privateKey = privateKey;
         }
 
+
+        public async Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder)
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
+
+            var request = new ShipmentDimensionRequest(_httpClient.BaseAddress.ToString());
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<ShipmentDimensionRequest, ShipmentDimensionResponse>(request);
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    $"/api/shipment/{request.Barcode}/dimensions", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendRequest(httpRequest);
+        }
+
+
         public async Task<IBookShipmentResponse> BookShipment(Action<IBookShipmentRequest> requestBuilder)
         {
-            _httpClient = SetupHttpClient();
+           
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
                 throw new NotImplementedException();
 
@@ -151,7 +204,7 @@ namespace BookingApi.UnitTests.Fixtures
 
         public async Task<IShipmentTrackingResponse> TrackShipment(Action<IShipmentTrackingRequest> requestBuilder)
         {
-            _httpClient = SetupHttpClient();
+           
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
                 throw new NotImplementedException();
 
