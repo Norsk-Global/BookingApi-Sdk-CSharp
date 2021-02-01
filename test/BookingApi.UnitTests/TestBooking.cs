@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using BookingApi.Core.Api;
 using BookingApi.Core.Api.Endpoints;
+using BookingApi.UnitTests.Fixtures;
+using Shouldly;
 using Xunit;
 
 namespace BookingApi.UnitTests
@@ -12,9 +14,11 @@ namespace BookingApi.UnitTests
         public async Task GivenValidDataAndKeys_ShouldBookShipment()
         {
             // Arrange
-            var client = ApiClient.ApiInstance;
+          
+            var client = FakeAPIClient.ApiInstance;
             client.UseStagingApi();
-            client.Authentication("KCNIMZ4SSA4M2NPFIX3XKXUSZLRCD23G2SCHUGOXP5PJ2IMT", "CQBT2TNFAMMCO5BP");
+          
+            client.Authentication("xxxxx", "xxxxxxx");
 
             var response = await client.BookShipment(builder => builder
                 .WithReadyByDate(DateTime.Now)
@@ -38,6 +42,7 @@ namespace BookingApi.UnitTests
                     .MobileNumber("00000000000")
                     .CountryCode("FR"))
                 .WithServiceCode("USV"));
+            response.ShouldNotBeNull();
         }
     }
 }

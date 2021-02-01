@@ -53,6 +53,36 @@ namespace BookingApi.Core.Api
             _privateKey = privateKey;
         }
 
+        public async Task<IShipmentTrackingResponse> TrackShipment(Action<IShipmentTrackingRequest> requestBuilder)
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
+
+            var request = new TrackShipmentRequest(Endpoint);
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<TrackShipmentRequest, TrackShipmentResponse>(request);
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    $"/api/shipment/{request.Barcode}", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendWithLock(httpRequest);
+        }
         public async Task<IBookShipmentResponse> BookShipment(Action<IBookShipmentRequest> requestBuilder)
         {
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
@@ -75,7 +105,7 @@ namespace BookingApi.Core.Api
                 message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
                 var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
-                    "/api/shipment", requestDateTime);
+                    "/api/shipment/", requestDateTime);
 
                 message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
                 message.Headers.Date = requestDateTime;
@@ -150,5 +180,7 @@ namespace BookingApi.Core.Api
             // TODO Handle Error responses
             throw new NotImplementedException();
         }
+
+       
     }
 }
