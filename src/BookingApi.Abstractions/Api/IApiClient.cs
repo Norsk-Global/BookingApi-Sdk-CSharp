@@ -16,5 +16,6 @@ namespace BookingApi.Abstractions.Api
 
         Task<IBookShipmentResponse> BookShipment(Action<IBookShipmentRequest> requestBuilder);
         Task<IShipmentTrackingResponse> TrackShipment(Action<IShipmentTrackingRequest> requestBuilder);
+        Task<string> GetShimpentScanImage(Action<IBookShipmentImageRequest> requestBuilder);
     }
 }
