@@ -42,72 +42,10 @@ namespace BookingApi.UnitTests.Fixtures
                     new StringEnumConverter()
                 }
             };
+            _httpClient = HttpClientSetup.SetupHttpClient();
         }
 
-        private static HttpClient SetupHttpClient()
-        {
-            var httpMessageHandler = new Mock<HttpMessageHandler>();
-            var fixture = new Fixture();
-
-
-            httpMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>()
-                )
-                .ReturnsAsync((HttpRequestMessage request, CancellationToken token) => {
-                    var response = new HttpResponseMessage();
-                    response.StatusCode = System.Net.HttpStatusCode.OK;
-                    if(request.RequestUri.Segments[request.RequestUri.Segments.Length-1] == "703451258001") { 
-                    response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new TrackShipmentResponse() {
-                        NorskBarcode = "703451258001",
-                        Barcode = "1641620934",
-                        Hawb = "305670",
-                        Status = new NarrativeVm() {
-                            Location = "SCN LYS-France-FR-(Lyon)                          ",
-                            Action = "Status Change",
-                            Message = "Status changed to: POD",
-                            StatusCode = "802",
-                            RecordedOn = DateTime.Parse("2020-10-22T09:15:11.517")
-                        },
-                        Narrative = new List<INarrativeVm>() {
-                            new NarrativeVm() {
-                            Location = "SCN LYS-France-FR-(Lyon)                          ",
-                            Action = "Status Change",
-                            Message = "Status changed to: POD",
-                            StatusCode = "802",
-                            RecordedOn = DateTime.Parse("2020-10-22T09:15:11.517")
-                        } },
-                        ProofOfDelivery = new ProofOfDelivery() {
-                            SignedOn = DateTime.Parse("2020-10-22T10:08:00"),
-                            SignedBy = "MOURIER M"
-                        }
-                    }
-                    ));
-                    } else {
-                        response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new BookShipmentResponse() {
-                            NorskBarcode = "703451258001",
-                            Barcode = "1641620934",
-                            Label = new byte[1] { 23 },
-                            ArchiveDocuments = new List<IShipmentArchiveDocument>() {
-                                new ShipmentArchiveDocument(){Contents = new byte[1] { 23 } }
-                            },
-                            Items = new List<IShipmentBookingItem>()
-                            {
-                                new ShipmentBookingItem{ Barcode = "1641620934", Label = new byte[1]{ 23 }, NorskBarcode="703451258001", ScanBarcode="XXXXX", Weight=0.78M }
-                            }
-                        }
-                   ));
-                    }
-                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    return response;
-                });
-
-            var httpClient = new HttpClient(httpMessageHandler.Object);
-            httpClient.BaseAddress = fixture.Create<Uri>();
-            return httpClient;
-        }
+        
 
         private readonly JsonSerializerSettings _serializerSettings;
         public string Endpoint => _isTestingMode ? "http://dev-api.norsk-global.com" : "http://api.norsk-global.com";
@@ -120,7 +58,7 @@ namespace BookingApi.UnitTests.Fixtures
 
         public async Task<IBookShipmentResponse> BookShipment(Action<IBookShipmentRequest> requestBuilder)
         {
-            _httpClient = SetupHttpClient();
+           
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
                 throw new NotImplementedException();
 
@@ -151,7 +89,7 @@ namespace BookingApi.UnitTests.Fixtures
 
         public async Task<IShipmentTrackingResponse> TrackShipment(Action<IShipmentTrackingRequest> requestBuilder)
         {
-            _httpClient = SetupHttpClient();
+           
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
                 throw new NotImplementedException();
 
@@ -213,5 +151,38 @@ namespace BookingApi.UnitTests.Fixtures
           
             throw new NotImplementedException();
         }
+
+        public async Task<string> GetShimpentScanImage(Action<IBookShipmentImageRequest> requestBuilder)
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
+
+            var request = new ShipmentImageRequest(_httpClient.BaseAddress.ToString());
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<ShipmentImageRequest, string>(request);
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    $"/api/package/{request.Barcode}/scanimage", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendRequest(httpRequest);
+        }
+
+       
     }
 }
