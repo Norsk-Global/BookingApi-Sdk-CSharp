@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookingApi.Abstractions.Api.Endpoints;
+
 
 namespace BookingApi.Abstractions.Api
 {
@@ -17,5 +19,6 @@ namespace BookingApi.Abstractions.Api
         Task<IBookShipmentResponse> BookShipment(Action<IBookShipmentRequest> requestBuilder);
         Task<IShipmentTrackingResponse> TrackShipment(Action<IShipmentTrackingRequest> requestBuilder);
         Task<string> GetShimpentScanImage(Action<IBookShipmentImageRequest> requestBuilder);
+        Task<List<IBulkShipmentDimensionResponse>> GetBulkShipmentDimensions(Action<IBulkShipmentDimensionsRequest> requestBuilder);
     }
 }
