@@ -19,6 +19,8 @@ using System.Collections.Generic;
 using BookingApi.Abstractions.Models.ShipmentTracking;
 using BookingApi.Core.Models.ShipmentTracking;
 using BookingApi.Abstractions.Models.ShipmentBooking;
+using BookingApi.Abstractions.Models.ShipmentDimension;
+using BookingApi.Core.Models.ShipmentDimension;
 
 namespace BookingApi.UnitTests.Fixtures
 {
@@ -42,12 +44,12 @@ namespace BookingApi.UnitTests.Fixtures
                     new StringEnumConverter()
                 }
             };
-            _httpClient = HttpClientSetup.SetupHttpClient();
+
+		_httpClient = HttpClientSetup.SetupHttpClient();
         }
-
-        
-
+		
         private readonly JsonSerializerSettings _serializerSettings;
+
         public string Endpoint => _isTestingMode ? "http://dev-api.norsk-global.com" : "http://api.norsk-global.com";
 
         public void Authentication(string secretKey, string privateKey)
@@ -55,6 +57,39 @@ namespace BookingApi.UnitTests.Fixtures
             _secretKey = secretKey;
             _privateKey = privateKey;
         }
+
+
+        public async Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder)
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
+
+            var request = new ShipmentDimensionRequest(_httpClient.BaseAddress.ToString());
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<ShipmentDimensionRequest, ShipmentDimensionResponse>(request);
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    $"/api/shipment/{request.Barcode}/dimensions", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendRequest(httpRequest);
+        }
+
 
         public async Task<IBookShipmentResponse> BookShipment(Action<IBookShipmentRequest> requestBuilder)
         {
