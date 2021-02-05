@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using BookingApi.Abstractions.Api;
 using BookingApi.Abstractions.Api.Endpoints;
+using BookingApi.Abstractions.Models.ShipmentDimension;
 using BookingApi.Core.Api.Endpoints;
 using BookingApi.Core.Models.ShipmentBooking;
 using BookingApi.Core.Serialization;
@@ -115,6 +116,7 @@ namespace BookingApi.Core.Api
         }
 
 
+
         public async Task<string> GetShimpentScanImage(Action<IBookShipmentImageRequest> requestBuilder)
         {
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
@@ -137,6 +139,47 @@ namespace BookingApi.Core.Api
 
                 var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
                     $"/api/package/{request.Barcode}/scanimage", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendWithLock(httpRequest);
+        }
+
+        public async Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder)
+
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
+
+
+            var request = new ShipmentImageRequest(Endpoint);
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<ShipmentImageRequest, string>(request);
+
+            var request = new ShipmentDimensionRequest(Endpoint);
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<ShipmentDimensionRequest, ShipmentDimensionResponse>(request);
+
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+
+                    $"/api/shipment/{request.Barcode}/dimensions", requestDateTime);
 
                 message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
                 message.Headers.Date = requestDateTime;
