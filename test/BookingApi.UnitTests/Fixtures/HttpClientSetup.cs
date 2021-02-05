@@ -61,6 +61,9 @@ namespace BookingApi.UnitTests.Fixtures
                         ));
                     } else if (request.RequestUri.Segments[request.RequestUri.Segments.Length - 1] == "scanimage") {
                         response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject("/9j/2wBDACAWGBwYFCAcGhwkIiAmMFA0MCwsMGJGSjpQdGZ6eHJmcG6AkLicgIiuim5woNqirr7EztDOfJri8uDI8LjKzsb//9wABBPo/9k="));
+                    } else if (request.RequestUri.Segments[request.RequestUri.Segments.Length - 1] == "label") {
+                        response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new byte[] {23,45,58 }), UTF8Encoding.UTF8, "application/pdf");
+                        
                     } else {
                         response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new BookShipmentResponse() {
                             NorskBarcode = "703451258001",
@@ -76,7 +79,9 @@ namespace BookingApi.UnitTests.Fixtures
                         }
                    ));
                     }
-                    response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    
+
+                    response.Content.Headers.ContentType = response.Content.Headers.ContentType ?? new MediaTypeHeaderValue("application/json");
                     return response;
                 });
 

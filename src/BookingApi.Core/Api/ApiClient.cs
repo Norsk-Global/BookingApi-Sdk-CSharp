@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
@@ -11,6 +12,7 @@ using BookingApi.Abstractions.Api.Endpoints;
 using BookingApi.Core.Api.Endpoints;
 using BookingApi.Core.Models.ShipmentBooking;
 using BookingApi.Core.Serialization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
@@ -180,6 +182,35 @@ namespace BookingApi.Core.Api
             throw new NotImplementedException();
         }
 
-       
+        public async Task<byte[]> GetShimpentLabel(Action<IBookShipmentLabelRequest> requestBuilder)
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
+
+            var request = new ShipmentLabelRequest(Endpoint);
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<ShipmentLabelRequest,byte[]>(request);
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    $"/api/shipment/{request.Barcode}/label", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendWithLock(httpRequest);
+        }
     }
 }

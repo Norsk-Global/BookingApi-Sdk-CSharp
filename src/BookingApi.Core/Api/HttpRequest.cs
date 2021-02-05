@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -29,7 +30,9 @@ namespace BookingApi.Core.Api
                 throw new UnauthorizedAccessException();
             if (!responseMessage.IsSuccessStatusCode)
                 ErrorResponse = await responseMessage.Content.ReadAsAsync<ErrorResponse>();
-            else Response = await responseMessage.Content.ReadAsAsync<TResponse>();
+            Response = responseMessage.Content.Headers.ContentType.MediaType =="application/pdf"
+                ? await responseMessage.Content.ReadAsStreamAsync<TResponse>()
+                : await responseMessage.Content.ReadAsAsync<TResponse>();
         }
 
         public void ConstructRequest(Func<TRequest, HttpRequestMessage> requestPredicate) =>
