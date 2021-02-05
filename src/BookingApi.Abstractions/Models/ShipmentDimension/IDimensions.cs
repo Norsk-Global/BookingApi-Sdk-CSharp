@@ -6,8 +6,9 @@ namespace BookingApi.Abstractions.Models.ShipmentDimension
 {
     public interface IDimensions
     {
-        string NorskBarcode { get; set; }
 
+        string NorskBarcode { get; set; }
+        string Barcode { get; set; }
         decimal Depth { get; set; }
         decimal Height { get; set; }
         decimal Width { get; set; }
