@@ -13,7 +13,6 @@ using BookingApi.Abstractions.Models.ShipmentDimension;
 using BookingApi.Core.Api.Endpoints;
 using BookingApi.Core.Models.ShipmentBooking;
 using BookingApi.Core.Serialization;
-using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
