@@ -44,14 +44,12 @@ namespace BookingApi.UnitTests.Fixtures
                     new StringEnumConverter()
                 }
             };
+
 		_httpClient = HttpClientSetup.SetupHttpClient();
         }
-
-        
-
-        
-
+		
         private readonly JsonSerializerSettings _serializerSettings;
+
         public string Endpoint => _isTestingMode ? "http://dev-api.norsk-global.com" : "http://api.norsk-global.com";
 
         public void Authentication(string secretKey, string privateKey)

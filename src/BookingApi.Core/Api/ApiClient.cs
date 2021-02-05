@@ -115,18 +115,17 @@ namespace BookingApi.Core.Api
         }
 
 
+
         public async Task<string> GetShimpentScanImage(Action<IBookShipmentImageRequest> requestBuilder)
         {
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
                 throw new NotImplementedException();
 
-
             var request = new ShipmentImageRequest(Endpoint);
             requestBuilder(request);
 
             var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
-            var httpRequest = new HttpRequest<ShipmentImageRequest, String>(request);
-
+            var httpRequest = new HttpRequest<ShipmentImageRequest, string>(request);
 
             httpRequest.ConstructRequest(() => {
                 var requestDateTime = DateTime.Now;
@@ -138,7 +137,8 @@ namespace BookingApi.Core.Api
                 message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
                 var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
-                    $"/api/shipment/{request.Barcode}/dimensions", requestDateTime);
+                    $"/api/package/{request.Barcode}/scanimage", requestDateTime);
+
                 message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
                 message.Headers.Date = requestDateTime;
                 return message;
@@ -146,13 +146,17 @@ namespace BookingApi.Core.Api
 
             return await SendWithLock(httpRequest);
         }
+
+        
         public async Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder)
         {
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
                 throw new NotImplementedException();
 
-            var request = new ShipmentDimensionRequest(Endpoint);
+			var request = new ShipmentDimensionRequest(Endpoint);
             requestBuilder(request);
+
+
 
             var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
             var httpRequest = new HttpRequest<ShipmentDimensionRequest, ShipmentDimensionResponse>(request);
