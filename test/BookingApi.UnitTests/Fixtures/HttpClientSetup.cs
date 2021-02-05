@@ -80,6 +80,23 @@ namespace BookingApi.UnitTests.Fixtures
                             }
                         }
                         ));
+                    } else if (request.RequestUri.Segments[request.RequestUri.Segments.Length - 1] == "dimensions") {
+                        response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new ShipmentDimensionResponse() {
+                            NorskBarcode = "509125319001",
+                            Barcode = "1641620934",
+                            Pieces = new List<IDimensions>() {
+                                new Dimensions {
+                                     Barcode ="1641620934",
+                                     ImageUrl = "api/1641620934/Image",
+                                      Depth = 30.5000000000m,
+                                      Height = 16.0m,
+                                      VolumeWeight = 1.0m,
+                                      Width = 2.0m,
+                                      Weight = 1m
+                                }
+                            }
+                        }
+                        ));
                     } else {
                         response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new BookShipmentResponse() {
                             NorskBarcode = "703451258001",
