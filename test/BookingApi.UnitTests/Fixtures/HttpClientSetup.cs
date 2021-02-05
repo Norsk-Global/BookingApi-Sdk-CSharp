@@ -12,7 +12,7 @@ using BookingApi.Abstractions.Models.ShipmentDimension;
 using BookingApi.Abstractions.Models.ShipmentTracking;
 using BookingApi.Core.Api.Endpoints;
 using BookingApi.Core.Models.ShipmentBooking;
-using BookingApi.Core.Models.ShipmentDimension;
+using BookingApi.Core.Models.ShipmentDimensions;
 using BookingApi.Core.Models.ShipmentTracking;
 using Moq;
 using Moq.Protected;
@@ -71,7 +71,7 @@ namespace BookingApi.UnitTests.Fixtures
                                                                     Barcode="12334",
                                                                     NorskBarcode="212321",
                                                                     Pieces = new List<IDimensions> {
-                                                                                                        new Dimensions {
+                                                                                                       new  Dimensions {
                                                                                                                         Depth=20.0m,
                                                                                                                         Height=10.0m,
                                                                                                                         VolumeWeight=45.0m,
@@ -99,7 +99,6 @@ namespace BookingApi.UnitTests.Fixtures
                             Barcode = "1641620934",
                             Pieces = new List<IDimensions>() {
                                 new Dimensions {
-                                     Barcode ="1641620934",
                                      ImageUrl = "api/1641620934/Image",
                                       Depth = 30.5000000000m,
                                       Height = 16.0m,

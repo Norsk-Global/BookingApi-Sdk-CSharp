@@ -28,7 +28,7 @@ namespace BookingApi.Core.Api.Endpoints
     {
         public string Barcode { get; set; }
         public string NorskBarcode { get; set; }
-        [JsonConverter(typeof(BulkShipmentDimensionSerializer))]
+        [JsonConverter(typeof(BookShipmentDimensionResponseSerializer))]
         public IList<IDimensions> Pieces { get; set; }
 
        

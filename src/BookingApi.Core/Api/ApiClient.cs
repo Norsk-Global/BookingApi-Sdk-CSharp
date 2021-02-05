@@ -66,6 +66,7 @@ namespace BookingApi.Core.Api
             var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
             var httpRequest = new HttpRequest<BulkShipmentDimensionRequest, List<BulkShipmentDimensionResponse>>(request);
 
+
             httpRequest.ConstructRequest(() => {
                 var requestDateTime = DateTime.Now;
 

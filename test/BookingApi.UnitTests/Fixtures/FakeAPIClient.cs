@@ -20,7 +20,6 @@ using BookingApi.Abstractions.Models.ShipmentTracking;
 using BookingApi.Core.Models.ShipmentTracking;
 using BookingApi.Abstractions.Models.ShipmentBooking;
 using BookingApi.Abstractions.Models.ShipmentDimension;
-using BookingApi.Core.Models.ShipmentDimension;
 
 namespace BookingApi.UnitTests.Fixtures
 {
