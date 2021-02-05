@@ -97,19 +97,25 @@ namespace BookingApi.Core.Api
             httpRequest.ConstructRequest(() => {
                 var requestDateTime = DateTime.Now;
 
-                var message = new HttpRequestMessage(request.Method, request.Endpoint)
-                {
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
                     Content = new StringContent(rawJson)
                 };
 
                 message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
                 var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    "/api/shipment/", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendWithLock(httpRequest);
+        }
+
 
         public async Task<string> GetShimpentScanImage(Action<IBookShipmentImageRequest> requestBuilder)
-
-        public async Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder)
-
         {
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
                 throw new NotImplementedException();
@@ -119,13 +125,7 @@ namespace BookingApi.Core.Api
             requestBuilder(request);
 
             var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
-            var httpRequest = new HttpRequest<ShipmentImageRequest, string>(request);
-
-            var request = new ShipmentDimensionRequest(Endpoint);
-            requestBuilder(request);
-
-            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
-            var httpRequest = new HttpRequest<ShipmentDimensionRequest, ShipmentDimensionResponse>(request);
+            var httpRequest = new HttpRequest<ShipmentImageRequest, String>(request);
 
 
             httpRequest.ConstructRequest(() => {
@@ -146,7 +146,36 @@ namespace BookingApi.Core.Api
 
             return await SendWithLock(httpRequest);
         }
+        public async Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder)
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
 
+            var request = new ShipmentDimensionRequest(Endpoint);
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<ShipmentDimensionRequest, ShipmentDimensionResponse>(request);
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    $"/api/shipment/{request.Barcode}/dimensions", requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return await SendWithLock(httpRequest);
+        }
         private string SignRequest(HttpMethod method, string rawJson, string contentType, string endpoint, DateTime dateTime)
         {
             var md5 = MD5.Create();
