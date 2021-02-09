@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using BookingApi.Abstractions.Models.ShipmentDimension;
-using BookingApi.Core.Models.ShipmentDimension;
+using BookingApi.Core.Models.ShipmentDimensions;
 using Newtonsoft.Json;
 
 namespace BookingApi.Core.Serialization

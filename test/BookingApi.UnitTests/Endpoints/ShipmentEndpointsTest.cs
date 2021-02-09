@@ -25,6 +25,7 @@ namespace BookingApi.UnitTests.Endpoints
 
 
         [Fact]
+
         public async Task Get_Booked_Shipment_Label_Valid()
         {
 
@@ -34,8 +35,23 @@ namespace BookingApi.UnitTests.Endpoints
             var response = await client.GetShimpentLabel(builder =>
               builder.WithBarcode("703794488001").WithLabelFormat("Pdf").WithLabelSize("A4")
               );
-           
+
             response.ShouldNotBeNull();
+        }
+        [Fact]
+        public async Task Get_BulkShipment_Dimensions_Valid()
+        {
+            var client = FakeAPIClient.ApiInstance;
+            client.UseStagingApi();
+            client.Authentication("xxxxxxx", "xxxx");
+            
+            var _endDate = new DateTime(2020, 07, 08, 16, 30, 0);
+            var _startDate = _endDate.AddMinutes(-15);
+            var response = await client.GetBulkShipmentDimensions(builder => builder.WithStartDate(_startDate).WithEndDate(_endDate));
+            
+            response.ShouldNotBeNull();
+            response[0].Pieces.ShouldNotBeNull();
+
         }
     }
 }

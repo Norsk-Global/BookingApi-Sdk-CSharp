@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using BookingApi.Abstractions.Api.Endpoints;
+
 
 namespace BookingApi.Abstractions.Api
 {
@@ -20,10 +22,12 @@ namespace BookingApi.Abstractions.Api
 
         Task<string> GetShimpentScanImage(Action<IBookShipmentImageRequest> requestBuilder);
 
-
         Task<byte[]> GetShimpentLabel(Action<IBookShipmentLabelRequest> requestBuilder);
 
+        Task<List<IBulkShipmentDimensionResponse>> GetBulkShipmentDimensions(Action<IBulkShipmentDimensionsRequest> requestBuilder);
+
         Task<IBookShipmentDimensionResponse> GetShipmentDimensions(Action<IBookShipmentDimensionRequest> requestBuilder);
+
 
     }
 }
