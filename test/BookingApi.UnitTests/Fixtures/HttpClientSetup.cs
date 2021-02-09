@@ -66,22 +66,25 @@ namespace BookingApi.UnitTests.Fixtures
                         response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject("/9j/2wBDACAWGBwYFCAcGhwkIiAmMFA0MCwsMGJGSjpQdGZ6eHJmcG6AkLicgIiuim5woNqirr7EztDOfJri8uDI8LjKzsb//9wABBPo/9k="));
                     } else if (request.RequestUri.Segments[request.RequestUri.Segments.Length - 1] == "label") {
                         response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new byte[] {23,45,58 }), UTF8Encoding.UTF8, "application/pdf");
-                    }else if (request.RequestUri.Segments[request.RequestUri.Segments.Length - 1] == "dimensions") {
-                        response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new ShipmentDimensionResponse() {
-                            NorskBarcode = "509125319001",
-                            Barcode = "1641620934",
-                            Pieces = new List<IDimensions>() {
-                                new Dimensions {
-                                     ImageUrl = "api/1641620934/Image",
-                                      Depth = 30.5000000000m,
-                                      Height = 16.0m,
-                                      VolumeWeight = 1.0m,
-                                      Width = 2.0m,
-                                      Weight = 1m
+                    }else if (request.RequestUri.Segments[request.RequestUri.Segments.Length - 1] == "dimensions" &&
+                              !(request.RequestUri.LocalPath.Contains("/bulk/shipment/dimensions"))
+                              )
+                              {
+                                response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(new ShipmentDimensionResponse() {
+                                    NorskBarcode = "509125319001",
+                                    Barcode = "1641620934",
+                                    Pieces = new List<IDimensions>() {
+                                        new Dimensions {
+                                             ImageUrl = "api/1641620934/Image",
+                                              Depth = 30.5000000000m,
+                                              Height = 16.0m,
+                                              VolumeWeight = 1.0m,
+                                              Width = 2.0m,
+                                              Weight = 1m
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                        ));
+                                ));
                     } else if (request.RequestUri.LocalPath.Contains("/bulk/shipment/dimensions")) {
                         response.Content = new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject(
                             new List<IBulkShipmentDimensionResponse> {
