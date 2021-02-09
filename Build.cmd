@@ -14,7 +14,7 @@ set DOTNET_MULTILEVEL_LOOKUP=0
 
 call Ensure-DotNetSdk.cmd
 
-SET SOLUTION=%CMDHOME%\Orleans.sln
+SET SOLUTION=%CMDHOME%\BookingApi-Sdk.sln
 
 :: Set DateTime suffix for debug builds
 if "%BuildConfiguration%" == "Debug" for /f %%j in ('powershell -NoProfile -ExecutionPolicy ByPass Get-Date -format "{yyyyMMddHHmm}"') do set DATE_SUFFIX=%%j
