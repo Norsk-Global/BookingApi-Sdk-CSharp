@@ -7,6 +7,7 @@ using Shouldly;
 using Xunit;
 using BookingApi.Core.Api.Endpoints;
 using BookingApi.Core.Api;
+using System.IO;
 
 namespace BookingApi.UnitTests.Endpoints
 {
@@ -24,6 +25,20 @@ namespace BookingApi.UnitTests.Endpoints
 
 
         [Fact]
+
+        public async Task Get_Booked_Shipment_Label_Valid()
+        {
+
+            var client = FakeAPIClient.ApiInstance;
+            client.UseStagingApi();
+            client.Authentication("xxxxxxx", "xxxx");
+            var response = await client.GetShimpentLabel(builder =>
+              builder.WithBarcode("703794488001").WithLabelFormat("Pdf").WithLabelSize("A4")
+              );
+
+            response.ShouldNotBeNull();
+        }
+        [Fact]
         public async Task Get_BulkShipment_Dimensions_Valid()
         {
             var client = FakeAPIClient.ApiInstance;
@@ -36,6 +51,7 @@ namespace BookingApi.UnitTests.Endpoints
             
             response.ShouldNotBeNull();
             response[0].Pieces.ShouldNotBeNull();
+
         }
     }
 }
