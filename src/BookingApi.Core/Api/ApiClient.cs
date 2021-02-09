@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -42,6 +43,7 @@ namespace BookingApi.Core.Api
         }
 
         public string Endpoint => _isTestingMode ? "http://dev-api.norsk-global.com" : "http://api.norsk-global.com";
+       
 
         public void UseLiveApi() => _isTestingMode = false;
 
@@ -53,6 +55,38 @@ namespace BookingApi.Core.Api
             _privateKey = privateKey;
         }
 
+        public async Task<List<IBulkShipmentDimensionResponse>> GetBulkShipmentDimensions(Action<IBulkShipmentDimensionsRequest> requestBuilder)
+        {
+            if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
+                throw new NotImplementedException();
+
+            var request = new BulkShipmentDimensionRequest(Endpoint);
+            requestBuilder(request);
+
+            var rawJson = JsonConvert.SerializeObject(request, _serializerSettings);
+            var httpRequest = new HttpRequest<BulkShipmentDimensionRequest, List<BulkShipmentDimensionResponse>>(request);
+
+
+            httpRequest.ConstructRequest(() => {
+                var requestDateTime = DateTime.Now;
+
+                var message = new HttpRequestMessage(request.Method, request.Endpoint) {
+                    Content = new StringContent(rawJson)
+                };
+
+                message.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+                var authentication = SignRequest(request.Method, rawJson, message.Content.Headers.ContentType.ToString(),
+                    $"/api/bulk/shipment/dimensions",
+                    requestDateTime);
+
+                message.Headers.TryAddWithoutValidation("Authorization", $"{_privateKey}:{authentication}");
+                message.Headers.Date = requestDateTime;
+                return message;
+            });
+
+            return new List<IBulkShipmentDimensionResponse>(await SendWithLock(httpRequest));
+        }
         public async Task<IShipmentTrackingResponse> TrackShipment(Action<IShipmentTrackingRequest> requestBuilder)
         {
             if (string.IsNullOrEmpty(_secretKey) || string.IsNullOrEmpty(_privateKey))
