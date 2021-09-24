@@ -19,7 +19,7 @@ namespace BookingApi.Abstractions.Api.Endpoints
         IRequester Requester { get; set; }
         IAddress Consignee { get; set; }
         ICollectionAddress CollectionAddress { get; set; }
-        IAddress Shipper { get; set; }
+        IShipperAddress Shipper { get; set; }
         IService Service { get; set; }
         IPicking Picking { get; set; }
         LabelFormat LabelFormat { get; set; }

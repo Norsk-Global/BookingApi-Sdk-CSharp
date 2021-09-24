@@ -50,7 +50,7 @@ namespace BookingApi.Core.Api.Endpoints
 
         public ICollectionAddress CollectionAddress { get; set; }
 
-        public IAddress Shipper { get; set; }
+        public IShipperAddress Shipper { get; set; }
 
         public IService Service { get; set; }
 

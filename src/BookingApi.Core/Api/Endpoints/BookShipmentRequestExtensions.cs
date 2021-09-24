@@ -10,135 +10,135 @@ namespace BookingApi.Core.Api.Endpoints
 {
     public static class BookShipmentRequestExtensions
     {
-        public static IBookShipmentRequest WithPieces(this IBookShipmentRequest IBookShipmentRequest, Action<PieceArrayFluent> builder)
+        public static IBookShipmentRequest WithPieces(this IBookShipmentRequest bookShipmentRequest, Action<PieceArrayFluent> builder)
         {
             var piecesArrayFluent = new PieceArrayFluent(new List<Piece>());
             builder(piecesArrayFluent);
-            IBookShipmentRequest.Pieces = ((List<Piece>)piecesArrayFluent).Cast<IPiece>().ToList();
-            return IBookShipmentRequest;
+            bookShipmentRequest.Pieces = ((List<Piece>)piecesArrayFluent).Cast<IPiece>().ToList();
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithReadyByDate(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithReadyByDate(this IBookShipmentRequest bookShipmentRequest,
             DateTime? currentDate = null)
         {
             if (currentDate == null) currentDate = DateTime.Now;
-            IBookShipmentRequest.ReadyByDate = currentDate.Value;
-            return IBookShipmentRequest;
+            bookShipmentRequest.ReadyByDate = currentDate.Value;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithHawb(this IBookShipmentRequest IBookShipmentRequest, string hawb)
+        public static IBookShipmentRequest WithHawb(this IBookShipmentRequest bookShipmentRequest, string hawb)
         {
-            IBookShipmentRequest.Hawb = hawb;
-            return IBookShipmentRequest;
+            bookShipmentRequest.Hawb = hawb;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithDescription(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithDescription(this IBookShipmentRequest bookShipmentRequest,
             string description)
         {
-            IBookShipmentRequest.Description = description;
-            return IBookShipmentRequest;
+            bookShipmentRequest.Description = description;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithDocuments(this IBookShipmentRequest IBookShipmentRequest)
+        public static IBookShipmentRequest WithDocuments(this IBookShipmentRequest bookShipmentRequest)
         {
-            IBookShipmentRequest.NonDox = false;
-            IBookShipmentRequest.Value = 0.00m;
-            return IBookShipmentRequest;
+            bookShipmentRequest.NonDox = false;
+            bookShipmentRequest.Value = 0.00m;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithNonDocuments(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithNonDocuments(this IBookShipmentRequest bookShipmentRequest,
             decimal shipmentValue)
         {
-            IBookShipmentRequest.NonDox = true;
-            IBookShipmentRequest.Value = shipmentValue;
-            return IBookShipmentRequest;
+            bookShipmentRequest.NonDox = true;
+            bookShipmentRequest.Value = shipmentValue;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithCurrency(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithCurrency(this IBookShipmentRequest bookShipmentRequest,
             string currencyCode)
         {
-            IBookShipmentRequest.Currency = currencyCode;
-            return IBookShipmentRequest;
+            bookShipmentRequest.Currency = currencyCode;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithDdp(this IBookShipmentRequest IBookShipmentRequest)
+        public static IBookShipmentRequest WithDdp(this IBookShipmentRequest bookShipmentRequest)
         {
-            IBookShipmentRequest.Ddp = true;
-            return IBookShipmentRequest;
+            bookShipmentRequest.Ddp = true;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithPallet(this IBookShipmentRequest IBookShipmentRequest)
+        public static IBookShipmentRequest WithPallet(this IBookShipmentRequest bookShipmentRequest)
         {
-            IBookShipmentRequest.Pallet = true;
-            return IBookShipmentRequest;
+            bookShipmentRequest.Pallet = true;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithRequester(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithRequester(this IBookShipmentRequest bookShipmentRequest,
             string requesterName, string phoneNumber = "")
         {
-            IBookShipmentRequest.Requester = new Requester {Name = requesterName, PhoneNumber = phoneNumber};
-            return IBookShipmentRequest;
+            bookShipmentRequest.Requester = new Requester {Name = requesterName, PhoneNumber = phoneNumber};
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithConsignee(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithConsignee(this IBookShipmentRequest bookShipmentRequest,
             Action<AddressFluent> builder)
         {
             var consigneeBuilder = new AddressFluent(null);
             builder(consigneeBuilder);
-            IBookShipmentRequest.Consignee = (Address)consigneeBuilder;
-            return IBookShipmentRequest;
+            bookShipmentRequest.Consignee = (Address)consigneeBuilder;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithCollection(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithCollection(this IBookShipmentRequest bookShipmentRequest,
             Action<CollectionAddressFluent> builder)
         {
             var collectionBuilder = new CollectionAddressFluent(null);
             builder(collectionBuilder);
-            IBookShipmentRequest.CollectionAddress = (CollectionAddress)collectionBuilder;
-            return IBookShipmentRequest;
+            bookShipmentRequest.CollectionAddress = (CollectionAddress)collectionBuilder;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithShipper(this IBookShipmentRequest IBookShipmentRequest,
-            Action<AddressFluent> builder)
+        public static IBookShipmentRequest WithShipper(this IBookShipmentRequest bookShipmentRequest,
+            Action<ShipperAddressFluent> builder)
         {
-            var shipperBuilder = new AddressFluent(null);
+            var shipperBuilder = new ShipperAddressFluent(null);
             builder(shipperBuilder);
-            IBookShipmentRequest.Shipper = (Address)shipperBuilder;
-            return IBookShipmentRequest;
+            bookShipmentRequest.Shipper = (ShipperAddress)shipperBuilder;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithServiceCode(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithServiceCode(this IBookShipmentRequest bookShipmentRequest,
             string serviceCode)
         {
-            IBookShipmentRequest.Service = new Service {Code = serviceCode};
-            return IBookShipmentRequest;
+            bookShipmentRequest.Service = new Service {Code = serviceCode};
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest AsPdf(this IBookShipmentRequest IBookShipmentRequest)
+        public static IBookShipmentRequest AsPdf(this IBookShipmentRequest bookShipmentRequest)
         {
-            IBookShipmentRequest.LabelFormat = LabelFormat.Pdf;
-            return IBookShipmentRequest;
+            bookShipmentRequest.LabelFormat = LabelFormat.Pdf;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest AsEpl(this IBookShipmentRequest IBookShipmentRequest)
+        public static IBookShipmentRequest AsEpl(this IBookShipmentRequest bookShipmentRequest)
         {
-            IBookShipmentRequest.LabelFormat = LabelFormat.Epl;
-            return IBookShipmentRequest;
+            bookShipmentRequest.LabelFormat = LabelFormat.Epl;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest AsZpl(this IBookShipmentRequest IBookShipmentRequest)
+        public static IBookShipmentRequest AsZpl(this IBookShipmentRequest bookShipmentRequest)
         {
-            IBookShipmentRequest.LabelFormat = LabelFormat.Zpl;
-            return IBookShipmentRequest;
+            bookShipmentRequest.LabelFormat = LabelFormat.Zpl;
+            return bookShipmentRequest;
         }
 
-        public static IBookShipmentRequest WithExportCustoms(this IBookShipmentRequest IBookShipmentRequest,
+        public static IBookShipmentRequest WithExportCustoms(this IBookShipmentRequest bookShipmentRequest,
             Action<ExportCustomsFluent> builder)
         {
             var exportCustomersBuilder = new ExportCustomsFluent(null);
             builder(exportCustomersBuilder);
-            IBookShipmentRequest.ExportCustoms = exportCustomersBuilder as IExportCustoms;
-            return IBookShipmentRequest;
+            bookShipmentRequest.ExportCustoms = exportCustomersBuilder as IExportCustoms;
+            return bookShipmentRequest;
         }
     }
 }

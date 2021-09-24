@@ -6,48 +6,49 @@ using BookingApi.Core.Models.Validation;
 
 namespace BookingApi.Core.Models.ShipmentBooking.Fluent
 {
-    public class AddressFluent : FluentBuilder<Address, IAddress>
+    public abstract class BaseAddressFluent<TAddress, TInterface> : FluentBuilder<TAddress, TInterface>
+        where TAddress : class, TInterface, new() where TInterface : class, IAddress
     {
-        public AddressFluent(IAddress model) : base(model)
+        public BaseAddressFluent(TInterface model) : base(model)
         {
         }
 
         [NotBeEmpty]
-        public AddressFluent Vat(string vat)
+        public BaseAddressFluent<TAddress, TInterface> Vat(string vat)
         {
-            _model.Vat = Validate(vat);
+            Model.Vat = Validate(vat);
             return this;
         }
 
         [BeBetweenLength(2, 15)]
-        public AddressFluent EoriNumber(string eori)
+        public BaseAddressFluent<TAddress, TInterface> EoriNumber(string eori)
         {
-            _model.Eori = Validate(eori);
+            Model.Eori = Validate(eori);
             return this;
         }
 
         [BeBetweenLength(2, 15)]
-        public AddressFluent TaxId(string taxId)
+        public BaseAddressFluent<TAddress, TInterface> TaxId(string taxId)
         {
-            _model.TaxId = Validate(taxId);
+            Model.TaxId = Validate(taxId);
             return this;
         }
 
         [NotBeEmpty, BeBetweenLength(2, 35)]
-        public AddressFluent ContactName(string contactName)
+        public BaseAddressFluent<TAddress, TInterface> ContactName(string contactName)
         {
-            _model.ContactName =Validate(contactName);
+            Model.ContactName = Validate(contactName);
             return this;
         }
 
         [BeBetweenLength(2, 35)]
-        public AddressFluent Company(string company)
+        public BaseAddressFluent<TAddress, TInterface> Company(string company)
         {
-            _model.Company = Validate(company);
+            Model.Company = Validate(company);
             return this;
         }
 
-        public AddressFluent AddressLines(params string[] addressLines)
+        public BaseAddressFluent<TAddress, TInterface> AddressLines(params string[] addressLines)
         {
             if (addressLines.Length == 0)
                 throw new ArgumentException("Expected at least 1 AddressFluent line", nameof(addressLines));
@@ -65,77 +66,84 @@ namespace BookingApi.Core.Models.ShipmentBooking.Fluent
         }
 
         [NotBeEmpty, BeBetweenLength(2, 35)]
-        public AddressFluent Address1(string addressLine1)
+        public BaseAddressFluent<TAddress, TInterface> Address1(string addressLine1)
         {
-            _model.Address1 = Validate(addressLine1);
+            Model.Address1 = Validate(addressLine1);
             return this;
         }
 
         [BeBetweenLength(0, 35)]
-        public AddressFluent Address2(string addressLine2)
+        public BaseAddressFluent<TAddress, TInterface> Address2(string addressLine2)
         {
-            _model.Address2 = Validate(addressLine2);
+            Model.Address2 = Validate(addressLine2);
             return this;
         }
 
         [BeBetweenLength(0, 35)]
-        public AddressFluent Address3(string addressLine3)
+        public BaseAddressFluent<TAddress, TInterface> Address3(string addressLine3)
         {
-            _model.Address3 = Validate(addressLine3);
+            Model.Address3 = Validate(addressLine3);
             return this;
         }
 
         [NotBeEmpty, BeBetweenLength(2, 35)]
-        public AddressFluent City(string city)
+        public BaseAddressFluent<TAddress, TInterface> City(string city)
         {
-            _model.City = Validate(city);
+            Model.City = Validate(city);
             return this;
         }
 
         [NotBeEmpty]
-        public AddressFluent Zipcode(string zipcode)
+        public BaseAddressFluent<TAddress, TInterface> Zipcode(string zipcode)
         {
-            _model.Zipcode = Validate(zipcode);
+            Model.Zipcode = Validate(zipcode);
             return this;
         }
 
         [NotBeEmpty, BeBetweenLength(2, 2)]
-        public AddressFluent CountryCode(string countryCode)
+        public BaseAddressFluent<TAddress, TInterface> CountryCode(string countryCode)
         {
-            _model.CountryCode = Validate(countryCode);
+            Model.CountryCode = Validate(countryCode);
             return this;
         }
 
         [BeBetweenLength(0, 35)]
-        public AddressFluent Division(string division)
+        public BaseAddressFluent<TAddress, TInterface> Division(string division)
         {
-            _model.Division = Validate(division);
+            Model.Division = Validate(division);
             return this;
         }
 
-        public AddressFluent DivisionCode(string divisionCode)
+        public BaseAddressFluent<TAddress, TInterface> DivisionCode(string divisionCode)
         {
-            _model.DivisionCode = Validate(divisionCode);
+            Model.DivisionCode = Validate(divisionCode);
             return this;
         }
 
         [BeBetweenLength(0, 20)]
-        public AddressFluent PhoneNumber(string phoneNumber)
+        public BaseAddressFluent<TAddress, TInterface> PhoneNumber(string phoneNumber)
         {
-            _model.PhoneNumber = Validate(phoneNumber);
+            Model.PhoneNumber = Validate(phoneNumber);
             return this;
         }
 
-        public AddressFluent MobileNumber(string mobileNumber)
+        public BaseAddressFluent<TAddress, TInterface> MobileNumber(string mobileNumber)
         {
-            _model.MobileNumber = Validate(mobileNumber);
+            Model.MobileNumber = Validate(mobileNumber);
             return this;
         }
 
-        public AddressFluent Fax(string fax)
+        public BaseAddressFluent<TAddress, TInterface> Fax(string fax)
         {
-            _model.Fax = Validate(fax);
+            Model.Fax = Validate(fax);
             return this;
+        }
+    }
+
+    public class AddressFluent : BaseAddressFluent<Address, IAddress>
+    {
+        public AddressFluent(IAddress model) : base(model)
+        {
         }
     }
 }

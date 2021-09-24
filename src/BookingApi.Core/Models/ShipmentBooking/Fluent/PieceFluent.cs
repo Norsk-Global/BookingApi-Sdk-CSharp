@@ -17,35 +17,35 @@ namespace BookingApi.Core.Models.ShipmentBooking.Fluent
         [NotBeEmpty, GreaterThan(0)]
         public PieceFluent Depth(decimal depth)
         {
-            _model.Depth = Validate(depth);
+            Model.Depth = Validate(depth);
             return this;
         }
 
         [NotBeEmpty, GreaterThan(0)]
         public PieceFluent Height(decimal height)
         {
-            _model.Height = Validate(height);
+            Model.Height = Validate(height);
             return this;
         }
 
         [NotBeEmpty, GreaterThan(0)]
         public PieceFluent Width(decimal width)
         {
-            _model.Width = Validate(width);
+            Model.Width = Validate(width);
             return this;
         }
 
         [NotBeEmpty, GreaterThan(0)]
         public PieceFluent Weight(decimal weight)
         {
-            _model.Weight = Validate(weight);
+            Model.Weight = Validate(weight);
             return this;
         }
 
         [NotBeEmpty, GreaterThan(0)]
         public PieceFluent NumberOfPieces(int numberOfPieces)
         {
-            _model.NumberOfPieces = Validate(numberOfPieces);
+            Model.NumberOfPieces = Validate(numberOfPieces);
             return this;
         }
 
@@ -53,7 +53,7 @@ namespace BookingApi.Core.Models.ShipmentBooking.Fluent
         {
             var productArrayFluent = new ProductArrayFluent(new List<Product>());
             builder(productArrayFluent);
-            _model.Products = ((List<Product>)productArrayFluent).Cast<IProduct>().ToList();
+            Model.Products = ((List<Product>)productArrayFluent).Cast<IProduct>().ToList();
 
             return this;
         }

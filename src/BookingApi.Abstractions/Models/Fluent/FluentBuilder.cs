@@ -10,14 +10,14 @@ namespace BookingApi.Abstractions.Models.Fluent
         where TImplementation : TInterface, new() where TInterface : class
     {
         public static implicit operator TImplementation(FluentBuilder<TImplementation, TInterface> builder) =>
-            builder._model;
+            builder.Model;
 
-        protected readonly TImplementation _model;
+        protected readonly TImplementation Model;
 
         protected FluentBuilder(TInterface model)
         {
             model ??= new TImplementation();
-            _model = (TImplementation)model;
+            Model = (TImplementation)model;
         }
 
         protected T Validate<T>(T value, [CallerMemberName] string method = "")

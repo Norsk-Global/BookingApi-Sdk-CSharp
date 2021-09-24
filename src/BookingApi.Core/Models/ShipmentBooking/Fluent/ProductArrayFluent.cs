@@ -20,7 +20,7 @@ namespace BookingApi.Core.Models.ShipmentBooking.Fluent
             builder(productFluent);
 
             Product product = productFluent;
-            _model.Add(product);
+            Model.Add(product);
             return this;
         }
     }

@@ -14,54 +14,54 @@ namespace BookingApi.Core.Models.ShipmentBooking.Fluent
         [NotBeEmpty]
         public ExportCustomsFluent InvoiceNumber(string invoiceNumber)
         {
-            _model.InvoiceNumber = invoiceNumber;
+            Model.InvoiceNumber = invoiceNumber;
             return this;
         }
 
         [BeBetweenLength(1, 35)]
         public ExportCustomsFluent PayeeOfGst(string payeeOfGst)
         {
-            _model.PayeeOfGST = payeeOfGst;
+            Model.PayeeOfGST = payeeOfGst;
             return this;
         }
 
         public ExportCustomsFluent InvoiceType(InvoiceType invoiceType)
         {
-            _model.InvoiceType = invoiceType;
+            Model.InvoiceType = invoiceType;
             return this;
         }
 
         [NotBeEmpty]
         public ExportCustomsFluent TermsOfPayment(string termsOfPayment)
         {
-            _model.TermsOfPayment = termsOfPayment;
+            Model.TermsOfPayment = termsOfPayment;
             return this;
         }
 
         [BeBetweenLength(3, 3)]
         public ExportCustomsFluent CurrencyCode(string currencyCode)
         {
-            _model.CurrencyCode = currencyCode;
+            Model.CurrencyCode = currencyCode;
             return this;
         }
 
         public ExportCustomsFluent TypeOfExport(TypeOfExport typeOfExport)
         {
-            _model.TypeOfExport = typeOfExport;
+            Model.TypeOfExport = typeOfExport;
             return this;
         }
 
         [NotBeEmpty]
         public ExportCustomsFluent TermsOfTrade(string termsOfTrade)
         {
-            _model.TermsOfTrade = termsOfTrade;
+            Model.TermsOfTrade = termsOfTrade;
             return this;
         }
 
         [BeBetweenLength(1, 35)]
         public ExportCustomsFluent InvoiceConsignee(string consignee)
         {
-            _model.InvoiceConsignee = consignee;
+            Model.InvoiceConsignee = consignee;
             return this;
         }
 
